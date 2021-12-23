@@ -1,6 +1,13 @@
 package _07_California_Weather;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /*
  * OBJECTIVE:
@@ -27,8 +34,28 @@ import java.util.HashMap;
  * temperature, you can get a free API key at: https://openweathermap.org/api 
  */
 
-public class CaliforniaWeather {
+public class CaliforniaWeather implements ActionListener {
     
+	JFrame frame = new JFrame();
+	JPanel panel = new JPanel();
+	JButton citySearch = new JButton("Search by City");
+	JButton weatherSearch = new JButton("Search by Weather");
+	JButton tempSearch = new JButton("Search by Temperature Range");
+	CaliforniaWeather(){
+    	panel.add(citySearch);
+    	panel.add(weatherSearch);
+    	panel.add(tempSearch);
+    	frame.add(panel);
+    	
+    	citySearch.addActionListener(this);
+    	weatherSearch.addActionListener(this);
+    	tempSearch.addActionListener(this);
+    	
+    	frame.setVisible(true);
+    	frame.pack();
+    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+	
     void start() {
         HashMap<String, WeatherData> weatherData = Utilities.getWeatherData();
         
@@ -38,8 +65,86 @@ public class CaliforniaWeather {
         
         if( datum == null ) {
             System.out.println("Unable to find weather data for: " + cityName);
-        } else {
+        }
+        else {
             System.out.println(cityName + " is " + datum.weatherSummary + " with a temperature of " + datum.temperatureF + " F");
         }
     }
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==citySearch) {
+			citySearch();
+		}
+		else if(e.getSource()==weatherSearch) {
+			weatherSearch();
+		}
+		else if(e.getSource()==tempSearch) {
+			tempSearch();
+		}
+	}
+	
+	void citySearch() {
+		HashMap<String, WeatherData> weatherData = Utilities.getWeatherData();
+		String input = JOptionPane.showInputDialog("Enter the name of a city in California: ");
+		String cityName = Utilities.capitalizeWords(input);
+		WeatherData datum = weatherData.get(cityName);
+		if( datum == null ) {
+            JOptionPane.showMessageDialog(null, "Unable to find weather data for: " + cityName);
+        }
+		else {
+        	JOptionPane.showMessageDialog(null, cityName + " is " + datum.weatherSummary + " with a temperature of " + datum.temperatureF + " F");
+        }
+	}
+	
+	void weatherSearch() {
+		int counter=0;
+		String finalCities = "";
+		HashMap<String, WeatherData> weatherData = Utilities.getWeatherData();
+	
+		String input = JOptionPane.showInputDialog("Entera type of weather (clear, partly cloudy, mostly cloudy,\novercast, possible drizzle, drizzle, light rain)");
+		String weatherType = Utilities.capitalizeWords(input);
+		for(String key : weatherData.keySet()) {
+			WeatherData data = weatherData.get(key);
+			if(weatherType.equals(data.weatherSummary)) {
+				if(counter==15) {
+					finalCities+=key+", \n";
+					counter=0;
+				}
+				else {
+					finalCities+=key+", ";
+					counter++;
+				}
+			}
+		}
+		JOptionPane.showMessageDialog(null, finalCities);
+	}
+    
+	void tempSearch() {
+		HashMap<String, WeatherData> weatherData = Utilities.getWeatherData();
+		String finalCities = "";
+		int counter=0;
+		
+		String minput = JOptionPane.showInputDialog("Enter a minimum temperature: ");
+		String maxput = JOptionPane.showInputDialog("Enter a maximum temperature: ");
+		double minTemp = Double.parseDouble(minput);
+		double maxTemp = Double.parseDouble(maxput);
+		
+		for(String key : weatherData.keySet()) {
+			WeatherData data = weatherData.get(key);
+			if(data.temperatureF >= minTemp && data.temperatureF <= maxTemp) {
+				if(counter==15) {
+					finalCities+=key+", \n";
+					counter=0;
+				}
+				else {
+					finalCities+=key+", ";
+					counter++;
+				}
+			}
+		}
+		JOptionPane.showMessageDialog(null, finalCities);
+	}
+	
 }

@@ -3,6 +3,8 @@ package _02_LongChipCompetition;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+
 public class LongChipCompetition {
     /*
      * The Beatles are eating lunch and playing a game to see who has the
@@ -15,7 +17,18 @@ public class LongChipCompetition {
 
     public static void main(String[] args) {
         LongChipCompetition lcc = new LongChipCompetition();
-
+        lcc.initializeBeatles();
+        double longestChip = 0;
+        Beatle lcBeatle = null;
+        for(Beatle b: lcc.theBeatles) {
+        	for(Chip c:b.getChips()) {
+        		if(c.getLength() > longestChip) {
+        			longestChip = c.getLength();
+        			lcBeatle = b;
+        		}
+        	}
+        }
+        JOptionPane.showMessageDialog(null, lcBeatle.getName() + "'s chip is the longest with a length of " + longestChip + "centimeters");
     }
 
     private void initializeBeatles() {
