@@ -47,7 +47,6 @@ public class WorldClocks implements ActionListener {
 	JTextArea textArea;
 	JButton button;
 
-	String city;
 	String dateStr;
 	String timeStr;
 
@@ -77,8 +76,8 @@ public class WorldClocks implements ActionListener {
 		frame.add(panel);
 		panel.add(textArea);
 		panel.add(button);
-		textArea.setText(city + "\n" + dateStr);
-		textArea.setText(textArea.getText() + "\n" + "San Diego, US" + makeCity("San Diego, US"));
+		//textArea.setText(city + "\n" + dateStr);
+		//textArea.setText(textArea.getText() + "\n" + "San Diego, US" + makeCity("San Diego, US"));
 
 		// This Timer object is set to call the actionPerformed() method every
 		// 1000 milliseconds
